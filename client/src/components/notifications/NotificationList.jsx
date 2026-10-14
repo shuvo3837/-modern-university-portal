@@ -8,14 +8,14 @@ export const NotificationList = ({
 }) => {
   if (notifications.length === 0) {
     return (
-      <div className="text-center py-12 px-4 rounded-xl border border-dashed border-slate-300 bg-white">
-        <p className="text-sm text-slate-500">{emptyMessage}</p>
+      <div className="warm-sheet text-center">
+        <p className="type-14">{emptyMessage}</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-2.5">
+    <div className="warm-panel">
       {notifications.map((notification) => (
         <NotificationItem
           key={notification.id || notification._id}

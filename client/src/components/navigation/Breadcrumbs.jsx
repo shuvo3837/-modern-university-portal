@@ -9,7 +9,7 @@ export const Breadcrumbs = () => {
   if (pathnames.length === 0) return null;
 
   return (
-    <nav className="flex items-center text-xs text-slate-500 mb-4" aria-label="Breadcrumb">
+    <nav className="crumbs type-14" aria-label="Breadcrumb">
       <Link
         to="/dashboard"
         className="flex items-center gap-1 hover:text-slate-900 transition-colors"

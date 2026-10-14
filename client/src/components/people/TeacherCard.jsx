@@ -8,21 +8,21 @@ export const TeacherCard = ({ teacher }) => {
   if (!teacher) return null;
 
   return (
-    <Card className="hover:shadow-md transition-shadow">
+    <Card variant="people">
       <div className="flex items-start justify-between gap-2 mb-3">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-700 flex items-center justify-center font-bold text-base">
+          <div className="icon-circle-ink">
             {teacher.name ? teacher.name.slice(0, 2).toUpperCase() : 'T'}
           </div>
           <div>
-            <h4 className="font-semibold text-slate-900 text-sm">{teacher.name}</h4>
+            <h4 className="person-name">{teacher.name}</h4>
             <p className="text-xs text-slate-500">{teacher.title || teacher.role}</p>
           </div>
         </div>
         <Badge variant="indigo">Faculty</Badge>
       </div>
 
-      <div className="space-y-2 text-xs text-slate-600 mb-4 bg-slate-50 p-3 rounded-lg">
+      <div className="warm-block space-y-2 text-xs">
         {teacher.office && (
           <div className="flex items-center gap-2">
             <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
@@ -53,7 +53,7 @@ export const TeacherCard = ({ teacher }) => {
         </a>
         <Link
           to={`/people/${teacher.id || teacher._id}`}
-          className="text-xs font-medium text-indigo-600 hover:underline"
+          className="text-link"
         >
           View Full Profile
         </Link>

@@ -30,11 +30,11 @@ export const Login = () => {
     <div className="flex-1 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-6">
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Welcome Back</h1>
+          <h1 className="page-title">Welcome Back</h1>
           <p className="text-sm text-slate-600 mt-1">Sign in to your university workspace</p>
         </div>
 
-        <Card className="p-6">
+        <Card>
           <LoginForm onSubmit={handleLogin} loading={loading} error={error} />
         </Card>
 

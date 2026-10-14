@@ -1,24 +1,28 @@
-import React, { useState } from 'react';
-import { Outlet } from 'react-router-dom';
-import { Sidebar } from '../components/layout/Sidebar';
+import React, { useEffect, useState } from 'react';
+import { Outlet, useLocation } from 'react-router-dom';
+import { Sidebar, BottomBar, MobileNav } from '../components/layout/Sidebar';
 import { Header } from '../components/layout/Header';
 import { Breadcrumbs } from '../components/navigation/Breadcrumbs';
 
 export const DashboardLayout = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const location = useLocation();
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location.pathname]);
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex">
-      {/* Sidebar Navigation */}
-      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0">
-        <Header onToggleSidebar={() => setSidebarOpen((prev) => !prev)} />
-        <main className="flex-1 p-4 md:p-8 max-w-7xl w-full mx-auto">
+    <div className="flex min-h-screen">
+      <Sidebar />
+      <div className="flex min-w-0 flex-1 flex-col">
+        <Header menuOpen={menuOpen} onToggleMenu={() => setMenuOpen((open) => !open)} />
+        <MobileNav open={menuOpen} />
+        <main className="overview-body w-full min-w-0">
           <Breadcrumbs />
           <Outlet />
         </main>
+        <BottomBar />
       </div>
     </div>
   );

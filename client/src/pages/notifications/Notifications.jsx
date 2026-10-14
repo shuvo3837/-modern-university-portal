@@ -19,9 +19,9 @@ export const Notifications = () => {
 
   return (
     <div className="space-y-6 max-w-4xl">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="page-head">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Campus Notifications</h1>
+          <h1 className="page-title">Campus Notifications</h1>
           <p className="text-sm text-slate-500 mt-1">
             Stay informed with room announcements, join requests, and academic alerts.
           </p>

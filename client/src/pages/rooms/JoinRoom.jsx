@@ -44,13 +44,13 @@ export const JoinRoom = () => {
       </Link>
 
       <div>
-        <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Join Academic Room</h1>
+        <h1 className="page-title">Join Academic Room</h1>
         <p className="text-sm text-slate-500 mt-1">
           Enter the 6-character room code shared by your teacher or department.
         </p>
       </div>
 
-      <Card className="p-6">
+      <Card>
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
             label="Room Code"

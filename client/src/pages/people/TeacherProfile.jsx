@@ -22,14 +22,14 @@ export const TeacherProfile = () => {
         <span>Back to People</span>
       </Link>
 
-      <Card className="p-6">
+      <Card>
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 pb-6 border-b border-slate-100">
           <div className="w-16 h-16 rounded-2xl bg-indigo-50 border border-indigo-200 text-indigo-700 flex items-center justify-center font-bold text-xl shadow-xs">
             {teacher.name ? teacher.name.slice(0, 2).toUpperCase() : 'T'}
           </div>
           <div className="flex-1">
             <div className="flex items-center gap-2 flex-wrap">
-              <h1 className="text-2xl font-bold text-slate-900">{teacher.name}</h1>
+              <h1 className="page-title">{teacher.name}</h1>
               <Badge variant="indigo">{teacher.role}</Badge>
             </div>
             <p className="text-sm text-slate-500 mt-0.5">{teacher.title}</p>

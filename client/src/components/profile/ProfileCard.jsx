@@ -14,7 +14,7 @@ export const ProfileCard = ({ user }) => {
         </div>
         <div className="flex-1">
           <div className="flex items-center gap-2 flex-wrap">
-            <h2 className="text-xl font-bold text-slate-900">{user.name}</h2>
+            <h2 className="person-name">{user.name}</h2>
             <Badge variant="indigo">{user.role}</Badge>
           </div>
           <p className="text-sm text-slate-500 font-mono">@{user.username}</p>

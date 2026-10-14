@@ -1,62 +1,50 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { Menu, Bell, User, LogOut } from 'lucide-react';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Bell, Menu, Search, User, X } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 
-export const Header = ({ onToggleSidebar }) => {
-  const { user, logout } = useAuth();
+export const Header = ({ menuOpen = false, onToggleMenu }) => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const [query, setQuery] = useState('');
+
+  const onSearch = (event) => {
+    event.preventDefault();
+    const term = query.trim();
+    if (!term) return;
+    navigate(`/rooms?q=${encodeURIComponent(term)}`);
+  };
 
   return (
-    <header className="h-16 bg-white border-b border-slate-200 sticky top-0 z-20 px-4 md:px-6 flex items-center justify-between">
-      <div className="flex items-center gap-3">
+    <header className="shell-toolbar">
+      <p className="display-brand shell-brand truncate">University Workspace</p>
+      <div className="shell-tools">
         <button
           type="button"
-          onClick={onToggleSidebar}
-          className="p-2 rounded-lg text-slate-500 hover:text-slate-700 hover:bg-slate-100 transition-colors md:hidden"
-          aria-label="Toggle navigation"
+          className="shell-menu icon-circle"
+          aria-expanded={menuOpen}
+          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+          onClick={onToggleMenu}
         >
-          <Menu className="w-5 h-5" />
+          {menuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
         </button>
-        <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-indigo-50 text-indigo-700 border border-indigo-200 hidden sm:inline-block">
-          Academic Portal
-        </span>
-      </div>
-
-      <div className="flex items-center gap-2 sm:gap-4">
-        <Link
-          to="/notifications"
-          className="relative p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"
-          title="Notifications"
-        >
-          <Bell className="w-5 h-5" />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-indigo-600 rounded-full" />
+        <form className="shell-search-wrap" onSubmit={onSearch}>
+          <Search />
+          <input
+            className="shell-search"
+            type="search"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Search campus"
+            aria-label="Search campus"
+          />
+        </form>
+        <Link to="/notifications" className="icon-circle" aria-label="Notifications">
+          <Bell className="w-4 h-4" />
         </Link>
-
-        {user && (
-          <div className="flex items-center gap-3 pl-2 sm:pl-3 border-l border-slate-200">
-            <Link
-              to="/profile"
-              className="flex items-center gap-2.5 text-slate-700 hover:text-indigo-600 transition-colors"
-            >
-              <div className="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 font-semibold text-xs flex items-center justify-center border border-indigo-200">
-                {user.name ? user.name.slice(0, 2).toUpperCase() : <User className="w-4 h-4" />}
-              </div>
-              <div className="hidden sm:block text-left leading-tight">
-                <p className="text-sm font-medium text-slate-800">{user.name}</p>
-                <p className="text-xs text-slate-500">{user.role}</p>
-              </div>
-            </Link>
-
-            <button
-              type="button"
-              onClick={logout}
-              className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
-              title="Sign Out"
-            >
-              <LogOut className="w-4 h-4" />
-            </button>
-          </div>
-        )}
+        <Link to="/profile" className="icon-circle" aria-label={user?.name || 'Account'}>
+          <User className="w-4 h-4" />
+        </Link>
       </div>
     </header>
   );

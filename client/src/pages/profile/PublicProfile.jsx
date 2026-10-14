@@ -25,7 +25,7 @@ export const PublicProfile = () => {
       </Link>
 
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Academic Profile</h1>
+        <h1 className="page-title">Academic Profile</h1>
         <p className="text-sm text-slate-500">Public campus directory profile</p>
       </div>
 

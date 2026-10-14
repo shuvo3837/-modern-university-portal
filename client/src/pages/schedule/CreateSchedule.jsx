@@ -4,6 +4,8 @@ import { ArrowLeft, Plus } from 'lucide-react';
 import { Card } from '../../components/common/Card';
 import { Input } from '../../components/common/Input';
 import { Button } from '../../components/common/Button';
+import { AuditSelect } from '../../components/common/AuditSelect';
+import { AuditDate } from '../../components/common/AuditDate';
 import { SCHEDULE_TYPES } from '../../utils/constants';
 import scheduleService from '../../services/scheduleService';
 
@@ -51,13 +53,13 @@ export const CreateSchedule = () => {
       </Link>
 
       <div>
-        <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Create Schedule Event</h1>
+        <h1 className="page-title">Create Schedule Event</h1>
         <p className="text-sm text-slate-500 mt-1">
           Add an academic class, office hours slot, or exam session to your calendar.
         </p>
       </div>
 
-      <Card className="p-6">
+      <Card>
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
             label="Event Title"
@@ -69,28 +71,16 @@ export const CreateSchedule = () => {
           />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
-                Event Type <span className="text-rose-500">*</span>
-              </label>
-              <select
-                name="type"
-                value={formData.type}
-                onChange={handleChange}
-                className="w-full rounded-lg border border-slate-300 bg-white py-2 px-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              >
-                {Object.values(SCHEDULE_TYPES).map((type) => (
-                  <option key={type} value={type}>
-                    {type}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <Input
+            <AuditSelect
+              label="Event Type *"
+              name="type"
+              value={formData.type}
+              onChange={handleChange}
+              options={Object.values(SCHEDULE_TYPES).map((type) => ({ value: type, label: type }))}
+            />
+            <AuditDate
               label="Date"
               name="date"
-              type="date"
               value={formData.date}
               onChange={handleChange}
               required
@@ -137,7 +127,7 @@ export const CreateSchedule = () => {
             <Link to="/schedule">
               <Button variant="secondary">Cancel</Button>
             </Link>
-            <Button variant="primary" type="submit" disabled={loading} icon={Plus}>
+            <Button variant="add" type="submit" disabled={loading} icon={Plus}>
               {loading ? 'Saving...' : 'Add to Schedule'}
             </Button>
           </div>

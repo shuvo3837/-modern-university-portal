@@ -27,13 +27,13 @@ export const Signup = () => {
     <div className="flex-1 flex items-center justify-center p-4 py-8">
       <div className="w-full max-w-lg">
         <div className="text-center mb-6">
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Create Academic Account</h1>
+          <h1 className="page-title">Create Academic Account</h1>
           <p className="text-sm text-slate-600 mt-1">
             Join your university, department, courses, and faculty network
           </p>
         </div>
 
-        <Card className="p-6">
+        <Card>
           <SignupForm onSubmit={handleSignup} loading={loading} error={error} />
         </Card>
 

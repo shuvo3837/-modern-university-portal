@@ -33,8 +33,8 @@ export const RoomDetails = () => {
       </Link>
 
       {/* Room Header Card */}
-      <Card className="p-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <Card>
+        <div className="page-head">
           <div>
             <div className="flex items-center gap-2 mb-2">
               <Badge variant="indigo">{room.type}</Badge>
@@ -43,7 +43,7 @@ export const RoomDetails = () => {
                 {room.code}
               </span>
             </div>
-            <h1 className="text-2xl font-bold text-slate-900">{room.name}</h1>
+            <h1 className="page-title">{room.name}</h1>
             <p className="text-sm text-slate-600 mt-1 max-w-2xl">{room.description}</p>
           </div>
 
@@ -93,7 +93,7 @@ export const RoomDetails = () => {
       </Card>
 
       {/* Tab Content Placeholder */}
-      <div className="p-8 text-center bg-white rounded-xl border border-slate-200">
+      <div className="warm-sheet text-center">
         <MessageSquare className="w-8 h-8 mx-auto text-slate-300 mb-2" />
         <h3 className="font-semibold text-slate-800 text-base">Room Content Feed</h3>
         <p className="text-xs text-slate-500 mt-1">

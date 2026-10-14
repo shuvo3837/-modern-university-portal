@@ -16,7 +16,7 @@ export const RoomCard = ({ room }) => {
   }[room.type] || 'slate';
 
   return (
-    <Card className="flex flex-col justify-between hover:shadow-md transition-shadow">
+    <Card variant="meeting" className="h-full justify-between">
       <div>
         <div className="flex items-start justify-between gap-2 mb-3">
           <Badge variant={typeBadgeVariant}>{room.type}</Badge>
@@ -26,8 +26,8 @@ export const RoomCard = ({ room }) => {
           </span>
         </div>
 
-        <h3 className="font-semibold text-slate-900 text-base mb-1 line-clamp-1">{room.name}</h3>
-        <p className="text-xs text-slate-500 mb-4 line-clamp-2 leading-relaxed">
+        <h3 className="meeting-name line-clamp-1">{room.name}</h3>
+        <p className="type-14 line-clamp-2">
           {room.description || 'No description provided.'}
         </p>
       </div>
@@ -40,7 +40,7 @@ export const RoomCard = ({ room }) => {
 
         <Link
           to={`/rooms/${room.id || room._id}`}
-          className="inline-flex items-center gap-1 font-medium text-indigo-600 hover:text-indigo-800 transition-colors"
+          className="open-pill"
         >
           <span>Open Room</span>
           <ArrowRight className="w-3 h-3" />

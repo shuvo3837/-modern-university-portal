@@ -14,9 +14,9 @@ export const ScheduleItem = ({ item }) => {
   }[item.type] || 'slate';
 
   return (
-    <div className="p-4 rounded-xl border border-slate-200 bg-white hover:border-indigo-200 transition-colors shadow-2xs">
+    <div className="meeting-card">
       <div className="flex items-start justify-between gap-3 mb-2">
-        <h4 className="font-semibold text-slate-900 text-sm">{item.title}</h4>
+        <h4 className="meeting-name">{item.title}</h4>
         <Badge variant={typeVariant}>{item.type}</Badge>
       </div>
 

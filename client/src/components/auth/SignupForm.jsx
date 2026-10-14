@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Mail, Lock, User, Building, GraduationCap } from 'lucide-react';
 import { Input } from '../common/Input';
 import { Button } from '../common/Button';
+import { AuditSelect } from '../common/AuditSelect';
 import { USER_ROLES } from '../../utils/constants';
 import { isValidEmail, isValidPassword } from '../../utils/validators';
 
@@ -95,26 +96,13 @@ export const SignupForm = ({ onSubmit, loading = false, error = null }) => {
         required
       />
 
-      <div>
-        <label htmlFor="role" className="block text-sm font-medium text-slate-700 mb-1">
-          Academic Role <span className="text-rose-500">*</span>
-        </label>
-        <div className="relative">
-          <select
-            id="role"
-            name="role"
-            value={formData.role}
-            onChange={handleChange}
-            className="block w-full rounded-lg border border-slate-300 bg-white py-2 px-3 text-sm text-slate-900 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
-          >
-            {Object.values(USER_ROLES).map((role) => (
-              <option key={role} value={role}>
-                {role}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
+      <AuditSelect
+        label="Academic Role *"
+        name="role"
+        value={formData.role}
+        onChange={handleChange}
+        options={Object.values(USER_ROLES).map((role) => ({ value: role, label: role }))}
+      />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <Input

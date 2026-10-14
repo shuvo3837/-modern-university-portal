@@ -4,6 +4,7 @@ import { ArrowLeft, Plus } from 'lucide-react';
 import { Card } from '../../components/common/Card';
 import { Input } from '../../components/common/Input';
 import { Button } from '../../components/common/Button';
+import { AuditSelect } from '../../components/common/AuditSelect';
 import { ROOM_TYPES, ROOM_ACCESS_TYPES } from '../../utils/constants';
 import roomService from '../../services/roomService';
 
@@ -51,13 +52,13 @@ export const CreateRoom = () => {
       </Link>
 
       <div>
-        <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Create Academic Room</h1>
+        <h1 className="page-title">Create Academic Room</h1>
         <p className="text-sm text-slate-500 mt-1">
           Establish a dedicated workspace for a course, department, student group, or project.
         </p>
       </div>
 
-      <Card className="p-6">
+      <Card>
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
             label="Room Name"
@@ -78,52 +79,37 @@ export const CreateRoom = () => {
               helperText="Optional 6-char unique identifier"
             />
 
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
-                Room Type <span className="text-rose-500">*</span>
-              </label>
-              <select
-                name="type"
-                value={formData.type}
-                onChange={handleChange}
-                className="w-full rounded-lg border border-slate-300 bg-white py-2 px-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              >
-                {Object.values(ROOM_TYPES).map((type) => (
-                  <option key={type} value={type}>
-                    {type}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <AuditSelect
+              label="Room Type *"
+              name="type"
+              value={formData.type}
+              onChange={handleChange}
+              options={Object.values(ROOM_TYPES).map((type) => ({ value: type, label: type }))}
+            />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">
-              Access Type <span className="text-rose-500">*</span>
-            </label>
-            <select
+            <AuditSelect
+              label="Access Type *"
               name="accessType"
               value={formData.accessType}
               onChange={handleChange}
-              className="w-full rounded-lg border border-slate-300 bg-white py-2 px-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            >
-              {Object.values(ROOM_ACCESS_TYPES).map((access) => (
-                <option key={access} value={access}>
-                  {access}
-                </option>
-              ))}
-            </select>
+              options={Object.values(ROOM_ACCESS_TYPES).map((access) => ({
+                value: access,
+                label: access,
+              }))}
+            />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Description</label>
+            <label className="type-14">Description</label>
             <textarea
               name="description"
               rows={3}
               value={formData.description}
               onChange={handleChange}
               placeholder="Outline the purpose, syllabus, or guidelines for this space..."
-              className="w-full rounded-lg border border-slate-300 bg-white p-2.5 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="audit-area"
             />
           </div>
 
@@ -131,7 +117,7 @@ export const CreateRoom = () => {
             <Link to="/rooms">
               <Button variant="secondary">Cancel</Button>
             </Link>
-            <Button variant="primary" type="submit" disabled={loading} icon={Plus}>
+            <Button variant="add" type="submit" disabled={loading} icon={Plus}>
               {loading ? 'Creating...' : 'Create Room'}
             </Button>
           </div>
