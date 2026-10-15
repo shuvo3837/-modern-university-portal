@@ -3,11 +3,6 @@ import bcrypt from 'bcryptjs';
 
 const userSchema = new mongoose.Schema(
   {
-    name: {
-      type: String,
-      required: [true, 'Name is required'],
-      trim: true,
-    },
     username: {
       type: String,
       required: [true, 'Username is required'],
@@ -24,15 +19,22 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: [true, 'Password is required'],
+      required: function () {
+        return !this.googleId;
+      },
       minlength: 6,
       select: false,
     },
+    googleId: {
+      type: String,
+      default: null,
+    },
     role: {
       type: String,
-      enum: ['Student', 'Teacher', 'Department Head', 'University Admin'],
-      default: 'Student',
+      enum: ['student', 'teacher', 'department_head', 'university_admin'],
+      default: 'student',
       required: true,
+      lowercase: true,
     },
     isActive: {
       type: Boolean,
@@ -41,15 +43,23 @@ const userSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
+    toJSON: {
+      transform(doc, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.__v;
+        delete ret.password;
+        return ret;
+      },
+    },
   }
 );
 
 // Hash password before saving
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
+userSchema.pre('save', async function () {
+  if (!this.isModified('password') || !this.password) return;
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
-  next();
 });
 
 // Compare password method

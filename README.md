@@ -70,7 +70,7 @@ university-workspace/
 │   │   ├── context/            # AuthContext, AppContext
 │   │   ├── hooks/              # useAuth, useApi
 │   │   ├── utils/              # constants, helpers, validators
-│   │   ├── data/               # mockData
+│   │   ├── data/               # helpdeskFaqs
 │   │   ├── App.jsx
 │   │   ├── main.jsx
 │   │   └── index.css

@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { generateRoomCode } from '../utils/generateRoomCode.js';
 
 const roomSchema = new mongoose.Schema(
   {
@@ -7,28 +8,29 @@ const roomSchema = new mongoose.Schema(
       required: [true, 'Room name is required'],
       trim: true,
     },
-    code: {
-      type: String,
-      required: true,
-      unique: true,
-      uppercase: true,
-      trim: true,
-    },
-    type: {
-      type: String,
-      enum: ['University', 'Department', 'Course', 'Personal', 'Custom'],
-      default: 'Course',
-      required: true,
-    },
-    accessType: {
-      type: String,
-      enum: ['Anyone can join', 'Request approval', 'Private'],
-      default: 'Anyone can join',
-      required: true,
-    },
     description: {
       type: String,
       default: '',
+    },
+    type: {
+      type: String,
+      enum: ['university', 'department', 'course', 'personal', 'custom'],
+      default: 'course',
+      required: true,
+      lowercase: true,
+    },
+    accessType: {
+      type: String,
+      enum: ['public', 'approval', 'private'],
+      default: 'public',
+      required: true,
+      lowercase: true,
+    },
+    code: {
+      type: String,
+      unique: true,
+      uppercase: true,
+      trim: true,
     },
     admin: {
       type: mongoose.Schema.Types.ObjectId,
@@ -36,27 +38,43 @@ const roomSchema = new mongoose.Schema(
       required: true,
     },
     university: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'University',
+      type: String,
+      default: 'Metropolitan University',
     },
     department: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Department',
+      type: String,
+      default: 'Department of CSE',
     },
     parentRoom: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Room',
       default: null,
     },
-    isArchived: {
+    isActive: {
       type: Boolean,
-      default: false,
+      default: true,
     },
   },
   {
     timestamps: true,
+    toJSON: {
+      transform(doc, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.__v;
+        return ret;
+      },
+    },
   }
 );
+
+// Pre-validate to auto-generate code if not specified
+roomSchema.pre('validate', function () {
+  if (!this.code) {
+    const prefix = this.name ? this.name.split(' ')[0].replace(/[^a-zA-Z]/g, '') : 'ROOM';
+    this.code = generateRoomCode(prefix);
+  }
+});
 
 export const Room = mongoose.model('Room', roomSchema);
 export default Room;

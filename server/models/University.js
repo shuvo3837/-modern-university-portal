@@ -10,31 +10,34 @@ const universitySchema = new mongoose.Schema(
     },
     code: {
       type: String,
-      required: true,
+      required: [true, 'University code is required'],
       unique: true,
       uppercase: true,
       trim: true,
-    },
-    domain: {
-      type: String,
-      lowercase: true,
-      trim: true,
-    },
-    admin: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
     },
     description: {
       type: String,
       default: '',
     },
-    logoUrl: {
+    logo: {
       type: String,
       default: '',
+    },
+    admin: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
     },
   },
   {
     timestamps: true,
+    toJSON: {
+      transform(doc, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.__v;
+        return ret;
+      },
+    },
   }
 );
 

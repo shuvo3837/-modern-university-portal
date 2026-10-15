@@ -1,6 +1,14 @@
 export { Button } from './Button';
 export { Card } from './Card';
 export { Input } from './Input';
+export { Select } from './Select';
 export { Badge } from './Badge';
+export { Avatar } from './Avatar';
+export { Tabs } from './Tabs';
+export { Dropdown } from './Dropdown';
+export { EmptyState } from './EmptyState';
+export { SearchInput } from './SearchInput';
+export { ConfirmDialog } from './ConfirmDialog';
 export { Modal } from './Modal';
 export { Loader } from './Loader';
+export { Loader as LoadingSpinner } from './Loader';

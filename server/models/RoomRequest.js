@@ -14,23 +14,39 @@ const roomRequestSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['Pending', 'Approved', 'Rejected'],
-      default: 'Pending',
+      enum: ['pending', 'approved', 'rejected'],
+      default: 'pending',
+      lowercase: true,
+    },
+    message: {
+      type: String,
+      default: '',
     },
     reviewedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
+      default: null,
     },
     reviewedAt: {
       type: Date,
+      default: null,
     },
   },
   {
     timestamps: true,
+    toJSON: {
+      transform(doc, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.__v;
+        return ret;
+      },
+    },
   }
 );
 
-roomRequestSchema.index({ room: 1, user: 1 }, { unique: true });
+// Prevent duplicate pending requests for same room and user
+roomRequestSchema.index({ room: 1, user: 1 });
 
 export const RoomRequest = mongoose.model('RoomRequest', roomRequestSchema);
 export default RoomRequest;

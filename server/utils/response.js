@@ -6,28 +6,19 @@ export const successResponse = (res, data = null, message = 'Success', statusCod
   return res.status(statusCode).json({
     success: true,
     message,
-    data,
+    data: data !== null ? data : {},
   });
 };
 
-export const errorResponse = (res, message = 'An error occurred', statusCode = 500, errors = null) => {
+export const errorResponse = (res, message = 'An error occurred', statusCode = 500, errors = []) => {
   return res.status(statusCode).json({
     success: false,
     message,
-    ...(errors && { errors }),
+    errors: Array.isArray(errors) ? errors : [errors].filter(Boolean),
   });
 };
 
-export const paginatedResponse = (res, data, page, limit, total, message = 'Success') => {
-  return res.status(200).json({
-    success: true,
-    message,
-    data,
-    pagination: {
-      page: Number(page),
-      limit: Number(limit),
-      total,
-      totalPages: Math.ceil(total / limit),
-    },
-  });
+export default {
+  successResponse,
+  errorResponse,
 };

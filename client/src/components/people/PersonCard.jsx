@@ -1,47 +1,73 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, Building } from 'lucide-react';
+import { Mail, ArrowRight } from 'lucide-react';
 import { Card } from '../common/Card';
+import { Avatar } from '../common/Avatar';
 import { Badge } from '../common/Badge';
 
 export const PersonCard = ({ person }) => {
   if (!person) return null;
 
+  const statusVariant = {
+    Available: 'success',
+    'In Class': 'accent',
+    Busy: 'danger',
+  }[person.availability] || 'neutral';
+
+  const statusKey = {
+    Available: 'available',
+    'In Class': 'in_class',
+    Busy: 'busy',
+  }[person.availability] || 'available';
+
   return (
-    <Card className="hover:shadow-md transition-shadow">
-      <div className="flex items-center gap-3 mb-3">
-        <div className="w-10 h-10 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-sm">
-          {person.name ? person.name.slice(0, 2).toUpperCase() : 'U'}
+    <Card className="hover:border-slate-300 transition-all flex flex-col justify-between">
+      <div>
+        <div className="flex items-start justify-between gap-2 mb-3">
+          <div className="flex items-center gap-3">
+            <Avatar name={person.name} size="md" status={statusKey} />
+            <div>
+              <h4 className="font-semibold text-sm text-[#172033] tracking-tight">
+                {person.name}
+              </h4>
+              <p className="text-xs text-[#5B6475]">{person.designation || person.role}</p>
+            </div>
+          </div>
+          <Badge variant={statusVariant} size="xs">
+            {person.availability || 'Available'}
+          </Badge>
         </div>
-        <div className="overflow-hidden">
-          <h4 className="font-semibold text-slate-900 text-sm truncate">{person.name}</h4>
-          <p className="text-xs text-slate-500 font-mono">@{person.username}</p>
+
+        <div className="space-y-1 text-xs text-[#5B6475] my-2">
+          <p className="font-medium text-[#172033]">{person.department}</p>
+          <p className="text-[11px] text-[#5B6475]/90 truncate">{person.university}</p>
+          {person.bio && (
+            <p className="text-xs text-[#5B6475] mt-2 line-clamp-2 leading-relaxed">
+              {person.bio}
+            </p>
+          )}
         </div>
       </div>
 
-      <div className="space-y-1.5 text-xs text-slate-600 mb-4">
-        <div className="flex items-center gap-2">
-          <Badge variant="slate">{person.role}</Badge>
-        </div>
-        <div className="flex items-center gap-1.5 text-slate-500 truncate">
-          <Building className="w-3.5 h-3.5 shrink-0" />
-          <span>{person.department || 'General'}</span>
-        </div>
-      </div>
+      <div className="mt-4 pt-3 border-t border-[#E2E6EE] flex items-center justify-between text-xs">
+        {person.email ? (
+          <a
+            href={`mailto:${person.email}`}
+            className="text-[#5B6475] hover:text-[#172033] flex items-center gap-1 font-medium transition-colors"
+          >
+            <Mail className="w-3.5 h-3.5" />
+            <span>Email</span>
+          </a>
+        ) : (
+          <span />
+        )}
 
-      <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
-        <a
-          href={`mailto:${person.email}`}
-          className="text-xs text-slate-500 hover:text-indigo-600 flex items-center gap-1"
-        >
-          <Mail className="w-3 h-3" />
-          <span>Email</span>
-        </a>
         <Link
-          to={`/people/${person.id || person._id || person.username}`}
-          className="text-xs font-medium text-indigo-600 hover:underline"
+          to={`/people/${person.id || person.username}`}
+          className="text-xs font-semibold text-[#3157D5] hover:text-[#172033] inline-flex items-center gap-1 transition-colors"
         >
-          View Profile
+          <span>View Profile</span>
+          <ArrowRight className="w-3 h-3" />
         </Link>
       </div>
     </Card>

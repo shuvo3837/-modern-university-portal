@@ -2,36 +2,46 @@ import mongoose from 'mongoose';
 
 const scheduleSchema = new mongoose.Schema(
   {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
     title: {
       type: String,
       required: [true, 'Schedule title is required'],
       trim: true,
     },
-    creator: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: true,
-    },
-    room: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Room',
-    },
-    type: {
+    activityType: {
       type: String,
-      enum: ['Lecture', 'Lab', 'Seminar', 'Office Hours', 'Exam', 'Meeting'],
-      default: 'Lecture',
+      enum: ['class', 'lecture', 'lab', 'seminar', 'meeting', 'consultation', 'office_hours', 'research', 'exam', 'available', 'private', 'other'],
+      default: 'class',
+      lowercase: true,
       required: true,
     },
     date: {
-      type: Date,
-      required: true,
+      type: String,
+      required: [true, 'Date is required'],
     },
     startTime: {
       type: String,
-      required: true,
+      required: [true, 'Start time is required'],
     },
     endTime: {
       type: String,
+      required: [true, 'End time is required'],
+    },
+    repeat: {
+      type: String,
+      enum: ['none', 'daily', 'weekly', 'biweekly'],
+      default: 'none',
+      lowercase: true,
+    },
+    visibility: {
+      type: String,
+      enum: ['public', 'university', 'department', 'teachers', 'students', 'selected', 'private'],
+      default: 'department',
+      lowercase: true,
       required: true,
     },
     location: {
@@ -42,9 +52,21 @@ const scheduleSchema = new mongoose.Schema(
       type: String,
       default: '',
     },
+    reminderMinutes: {
+      type: Number,
+      default: 15,
+    },
   },
   {
     timestamps: true,
+    toJSON: {
+      transform(doc, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.__v;
+        return ret;
+      },
+    },
   }
 );
 

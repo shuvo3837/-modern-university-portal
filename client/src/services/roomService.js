@@ -1,6 +1,6 @@
 /**
  * Room Management Service
- * Handles room creation, retrieval, joining, and listing.
+ * Handles room creation, retrieval, joining, requests, posts, and members.
  */
 
 import api from './api';
@@ -10,7 +10,7 @@ export const roomService = {
    * Get all rooms for current user
    */
   async getMyRooms() {
-    return api.get('/rooms/my-rooms');
+    return api.get('/rooms', { params: { myRooms: true } });
   },
 
   /**
@@ -22,7 +22,7 @@ export const roomService = {
   },
 
   /**
-   * Get single room details by ID
+   * Get single room details by ID or code
    * @param {string} roomId
    */
   async getRoomById(roomId) {
@@ -38,8 +38,8 @@ export const roomService = {
   },
 
   /**
-   * Join a room via code or ID
-   * @param {{ roomCode?: string, roomId?: string }} data
+   * Join a room via code
+   * @param {{ code?: string, roomCode?: string }} data
    */
   async joinRoom(data) {
     return api.post('/rooms/join', data);
@@ -51,6 +51,41 @@ export const roomService = {
    */
   async getRoomMembers(roomId) {
     return api.get(`/rooms/${roomId}/members`);
+  },
+
+  /**
+   * Get pending join requests
+   * @param {string} roomId
+   */
+  async getRoomRequests(roomId) {
+    return api.get(`/rooms/${roomId}/requests`);
+  },
+
+  /**
+   * Approve or reject a join request
+   * @param {string} roomId
+   * @param {string} requestId
+   * @param {'approve'|'reject'} action
+   */
+  async handleRoomRequest(roomId, requestId, action) {
+    return api.put(`/rooms/${roomId}/requests/${requestId}`, { action });
+  },
+
+  /**
+   * Fetch posts for a room
+   * @param {string} roomId
+   */
+  async getRoomPosts(roomId) {
+    return api.get(`/rooms/${roomId}/posts`);
+  },
+
+  /**
+   * Create a post inside a room
+   * @param {string} roomId
+   * @param {{ content: string, attachments?: string[] }} postData
+   */
+  async createRoomPost(roomId, postData) {
+    return api.post(`/rooms/${roomId}/posts`, postData);
   },
 };
 

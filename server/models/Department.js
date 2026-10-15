@@ -9,31 +9,35 @@ const departmentSchema = new mongoose.Schema(
     },
     code: {
       type: String,
-      required: true,
+      required: [true, 'Department code is required'],
       uppercase: true,
       trim: true,
-    },
-    university: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'University',
-      required: true,
-    },
-    head: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
     },
     description: {
       type: String,
       default: '',
     },
+    university: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'University',
+    },
+    head: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
   },
   {
     timestamps: true,
+    toJSON: {
+      transform(doc, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.__v;
+        return ret;
+      },
+    },
   }
 );
-
-// Compound index so department codes are unique per university
-departmentSchema.index({ university: 1, code: 1 }, { unique: true });
 
 export const Department = mongoose.model('Department', departmentSchema);
 export default Department;

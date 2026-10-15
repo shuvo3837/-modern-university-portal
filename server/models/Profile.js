@@ -8,48 +8,75 @@ const profileSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    bio: {
+    fullName: {
       type: String,
       default: '',
-      maxlength: 500,
+      trim: true,
     },
-    avatarUrl: {
+    profileImage: {
+      type: String,
+      default: '',
+    },
+    contact: {
       type: String,
       default: '',
     },
     university: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'University',
+      type: String,
+      default: 'Metropolitan University',
     },
     department: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Department',
+      type: String,
+      default: 'Department of CSE',
     },
-    // Academic details
-    title: {
+    designation: {
       type: String,
       default: '',
     },
-    office: {
+    bio: {
       type: String,
       default: '',
+      maxlength: 1000,
     },
-    officeHours: {
-      type: String,
-      default: '',
-    },
-    enrollmentId: {
-      type: String,
-      default: '',
-    },
-    coursesTaught: [
+    researchInterests: [
       {
         type: String,
       },
     ],
+    courses: [
+      {
+        type: String,
+      },
+    ],
+    officeLocation: {
+      type: String,
+      default: '',
+    },
+    linkedin: {
+      type: String,
+      default: '',
+    },
+    profileVisibility: {
+      type: String,
+      enum: ['public', 'university', 'department', 'private'],
+      default: 'public',
+    },
+    contactVisibility: {
+      type: String,
+      enum: ['public', 'university', 'department', 'private'],
+      default: 'university',
+    },
   },
   {
     timestamps: true,
+    toJSON: {
+      transform(doc, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.__v;
+        return ret;
+      },
+    },
   }
 );
 

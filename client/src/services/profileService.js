@@ -30,19 +30,16 @@ export const profileService = {
   },
 
   /**
-   * List directory of people (teachers, students, staff)
+   * List directory of people (search, role, department)
+   * GET /api/users?search=&role=&department=
    * @param {Object} params
    */
-  async getPeople(params = {}) {
-    return api.get('/users/people', { params });
+  async getUsers(params = {}) {
+    return api.get('/users', { params });
   },
 
-  /**
-   * Get teacher specific profile
-   * @param {string} teacherId
-   */
-  async getTeacherProfile(teacherId) {
-    return api.get(`/users/teachers/${teacherId}`);
+  async getPeople(params = {}) {
+    return this.getUsers(params);
   },
 };
 

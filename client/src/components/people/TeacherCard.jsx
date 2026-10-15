@@ -1,61 +1,90 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, MapPin, Clock, BookOpen } from 'lucide-react';
+import { Mail, Clock, MapPin, ArrowRight } from 'lucide-react';
 import { Card } from '../common/Card';
+import { Avatar } from '../common/Avatar';
 import { Badge } from '../common/Badge';
 
 export const TeacherCard = ({ teacher }) => {
   if (!teacher) return null;
 
+  const statusVariant = {
+    Available: 'success',
+    'In Class': 'accent',
+    Busy: 'danger',
+  }[teacher.availability] || 'neutral';
+
+  const statusKey = {
+    Available: 'available',
+    'In Class': 'in_class',
+    Busy: 'busy',
+  }[teacher.availability] || 'available';
+
   return (
-    <Card className="hover:shadow-md transition-shadow">
-      <div className="flex items-start justify-between gap-2 mb-3">
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-700 flex items-center justify-center font-bold text-base">
-            {teacher.name ? teacher.name.slice(0, 2).toUpperCase() : 'T'}
+    <Card className="hover:border-slate-300 transition-all flex flex-col justify-between">
+      <div>
+        {/* Header: Avatar, Name, Designation, Availability */}
+        <div className="flex items-start justify-between gap-2 mb-3">
+          <div className="flex items-center gap-3">
+            <Avatar name={teacher.name} size="md" status={statusKey} />
+            <div>
+              <h4 className="font-semibold text-sm text-[#172033] tracking-tight">
+                {teacher.name}
+              </h4>
+              <p className="text-xs text-[#5B6475]">{teacher.designation || 'Faculty Member'}</p>
+            </div>
           </div>
-          <div>
-            <h4 className="font-semibold text-slate-900 text-sm">{teacher.name}</h4>
-            <p className="text-xs text-slate-500">{teacher.title || teacher.role}</p>
-          </div>
+          <Badge variant={statusVariant} size="xs">
+            {teacher.availability || 'Available'}
+          </Badge>
         </div>
-        <Badge variant="indigo">Faculty</Badge>
+
+        {/* Academic Details */}
+        <div className="space-y-1.5 text-xs text-[#5B6475] my-2 bg-[#F7F8FA] p-2.5 rounded-md border border-[#E2E6EE]">
+          <p className="font-semibold text-[#172033]">{teacher.department}</p>
+          {teacher.office && (
+            <p className="flex items-center gap-1.5 text-[11px]">
+              <MapPin className="w-3 h-3 text-slate-400 shrink-0" />
+              <span>{teacher.office}</span>
+            </p>
+          )}
+          {teacher.officeHours && (
+            <p className="flex items-center gap-1.5 text-[11px]">
+              <Clock className="w-3 h-3 text-slate-400 shrink-0" />
+              <span>Office Hours: {teacher.officeHours}</span>
+            </p>
+          )}
+        </div>
+
+        {/* Courses preview */}
+        {teacher.courses && teacher.courses.length > 0 && (
+          <div className="mt-2 text-[11px] text-[#5B6475]">
+            <span className="font-semibold text-[#172033]">Courses: </span>
+            <span>{teacher.courses.slice(0, 2).join(', ')}</span>
+          </div>
+        )}
       </div>
 
-      <div className="space-y-2 text-xs text-slate-600 mb-4 bg-slate-50 p-3 rounded-lg">
-        {teacher.office && (
-          <div className="flex items-center gap-2">
-            <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-            <span className="truncate">{teacher.office}</span>
-          </div>
+      {/* Card Footer */}
+      <div className="mt-4 pt-3 border-t border-[#E2E6EE] flex items-center justify-between text-xs">
+        {teacher.email ? (
+          <a
+            href={`mailto:${teacher.email}`}
+            className="text-[#5B6475] hover:text-[#172033] flex items-center gap-1 font-medium transition-colors"
+          >
+            <Mail className="w-3.5 h-3.5" />
+            <span>Email</span>
+          </a>
+        ) : (
+          <span />
         )}
-        {teacher.officeHours && (
-          <div className="flex items-center gap-2">
-            <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-            <span className="truncate">{teacher.officeHours}</span>
-          </div>
-        )}
-        {teacher.coursesTaught && teacher.coursesTaught.length > 0 && (
-          <div className="flex items-center gap-2">
-            <BookOpen className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-            <span className="truncate">Courses: {teacher.coursesTaught.join(', ')}</span>
-          </div>
-        )}
-      </div>
 
-      <div className="pt-2 flex items-center justify-between">
-        <a
-          href={`mailto:${teacher.email}`}
-          className="text-xs text-slate-500 hover:text-indigo-600 flex items-center gap-1"
-        >
-          <Mail className="w-3 h-3" />
-          <span>Contact</span>
-        </a>
         <Link
-          to={`/people/${teacher.id || teacher._id}`}
-          className="text-xs font-medium text-indigo-600 hover:underline"
+          to={`/people/${teacher.id || teacher.username}`}
+          className="text-xs font-semibold text-[#3157D5] hover:text-[#172033] inline-flex items-center gap-1 transition-colors"
         >
-          View Full Profile
+          <span>View Profile</span>
+          <ArrowRight className="w-3 h-3" />
         </Link>
       </div>
     </Card>

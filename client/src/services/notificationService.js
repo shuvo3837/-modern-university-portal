@@ -18,14 +18,22 @@ export const notificationService = {
    * @param {string} notificationId
    */
   async markAsRead(notificationId) {
-    return api.patch(`/notifications/${notificationId}/read`);
+    return api.put(`/notifications/${notificationId}/read`);
   },
 
   /**
    * Mark all notifications as read
    */
   async markAllAsRead() {
-    return api.patch('/notifications/read-all');
+    return api.put('/notifications/read-all');
+  },
+
+  /**
+   * Delete a notification
+   * @param {string} notificationId
+   */
+  async deleteNotification(notificationId) {
+    return api.delete(`/notifications/${notificationId}`);
   },
 };
 

@@ -12,33 +12,45 @@ const postSchema = new mongoose.Schema(
       ref: 'User',
       required: true,
     },
-    title: {
-      type: String,
-      trim: true,
-      default: '',
-    },
     content: {
       type: String,
       required: [true, 'Post content is required'],
-    },
-    isAnnouncement: {
-      type: Boolean,
-      default: false,
-    },
-    isPinned: {
-      type: Boolean,
-      default: false,
+      trim: true,
     },
     attachments: [
       {
-        fileName: String,
-        fileUrl: String,
-        fileType: String,
+        type: String,
+      },
+    ],
+    comments: [
+      {
+        author: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'User',
+          required: true,
+        },
+        content: {
+          type: String,
+          required: true,
+          trim: true,
+        },
+        createdAt: {
+          type: Date,
+          default: Date.now,
+        },
       },
     ],
   },
   {
     timestamps: true,
+    toJSON: {
+      transform(doc, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.__v;
+        return ret;
+      },
+    },
   }
 );
 

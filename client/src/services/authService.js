@@ -8,29 +8,43 @@ import { STORAGE_KEYS } from '../utils/constants';
 
 export const authService = {
   /**
-   * Login with email and password
-   * @param {{ email: string, password: string }} credentials
+   * Login with email/username and password
+   * @param {{ email?: string, username?: string, password: string }} credentials
    */
   async login(credentials) {
     const res = await api.post('/auth/login', credentials);
-    if (res.data?.token) {
-      localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, res.data.token);
-      localStorage.setItem(STORAGE_KEYS.USER_DATA, JSON.stringify(res.data.user));
+    const token = res.token || res.data?.token;
+    const user = res.user || res.data?.user;
+
+    if (token) {
+      localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, token);
+      if (user) {
+        localStorage.setItem(STORAGE_KEYS.USER_DATA, JSON.stringify(user));
+      }
     }
     return res;
   },
 
   /**
    * Register a new user
-   * @param {Object} userData
+   * @param {{ username: string, email: string, password: string, confirmPassword?: string, role?: string }} userData
    */
-  async signup(userData) {
-    const res = await api.post('/auth/signup', userData);
-    if (res.data?.token) {
-      localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, res.data.token);
-      localStorage.setItem(STORAGE_KEYS.USER_DATA, JSON.stringify(res.data.user));
+  async register(userData) {
+    const res = await api.post('/auth/register', userData);
+    const token = res.token || res.data?.token;
+    const user = res.user || res.data?.user;
+
+    if (token) {
+      localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, token);
+      if (user) {
+        localStorage.setItem(STORAGE_KEYS.USER_DATA, JSON.stringify(user));
+      }
     }
     return res;
+  },
+
+  async signup(userData) {
+    return this.register(userData);
   },
 
   /**

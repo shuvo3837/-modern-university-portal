@@ -14,8 +14,9 @@ const roomMemberSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ['Admin', 'Moderator', 'Member'],
-      default: 'Member',
+      enum: ['admin', 'moderator', 'member'],
+      default: 'member',
+      lowercase: true,
     },
     joinedAt: {
       type: Date,
@@ -24,9 +25,18 @@ const roomMemberSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
+    toJSON: {
+      transform(doc, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.__v;
+        return ret;
+      },
+    },
   }
 );
 
+// Prevent duplicate memberships
 roomMemberSchema.index({ room: 1, user: 1 }, { unique: true });
 
 export const RoomMember = mongoose.model('RoomMember', roomMemberSchema);

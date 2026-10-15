@@ -10,24 +10,35 @@ const notificationSchema = new mongoose.Schema(
     sender: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
+      default: null,
+    },
+    type: {
+      type: String,
+      enum: [
+        'room_request',
+        'request_approved',
+        'request_rejected',
+        'room_invitation',
+        'announcement',
+        'schedule_reminder',
+        'system',
+      ],
+      default: 'system',
+      lowercase: true,
+      required: true,
     },
     title: {
       type: String,
-      required: true,
+      required: [true, 'Notification title is required'],
       trim: true,
     },
     message: {
       type: String,
-      required: true,
+      required: [true, 'Notification message is required'],
     },
-    type: {
+    referenceId: {
       type: String,
-      enum: ['room_invite', 'join_request', 'announcement', 'schedule_update', 'system'],
-      default: 'system',
-    },
-    link: {
-      type: String,
-      default: '',
+      default: null,
     },
     isRead: {
       type: Boolean,
@@ -36,6 +47,14 @@ const notificationSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
+    toJSON: {
+      transform(doc, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.__v;
+        return ret;
+      },
+    },
   }
 );
 

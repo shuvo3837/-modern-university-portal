@@ -1,113 +1,141 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { DoorOpen, Calendar, Users, PlusCircle, ArrowUpRight, Bell } from 'lucide-react';
+import {
+  DoorOpen,
+  Plus,
+  ArrowRight,
+  LogIn,
+  PlusCircle,
+} from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
-import { Card } from '../../components/common/Card';
+import { useApp } from '../../context/AppContext';
 import { Button } from '../../components/common/Button';
-import { Badge } from '../../components/common/Badge';
-import { RoomList } from '../../components/rooms/RoomList';
-import { ScheduleCalendar } from '../../components/schedule/ScheduleCalendar';
-import { mockRooms, mockSchedules } from '../../data/mockData';
+import { RoomCard } from '../../components/rooms/RoomCard';
+import { AddJoinRoomModal } from '../../components/rooms/AddJoinRoomModal';
 
 export const Dashboard = () => {
   const { user } = useAuth();
+  const {
+    rooms,
+    isAddRoomModalOpen,
+    addRoomModalTab,
+    openAddRoomModal,
+    closeAddRoomModal,
+  } = useApp();
+
+  const userName = user?.fullName || user?.name || user?.username || 'Scholar';
 
   return (
     <div className="space-y-6">
-      {/* Welcome Banner */}
-      <div className="bg-gradient-to-r from-indigo-700 to-indigo-900 rounded-2xl p-6 sm:p-8 text-white shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      {/* Workspace Top Welcome Bar */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-[#E2E6EE]">
         <div>
-          <span className="text-xs uppercase tracking-wider font-semibold text-indigo-200">
-            {user?.university || 'University Campus'} • {user?.department || 'Department'}
-          </span>
-          <h1 className="text-2xl sm:text-3xl font-bold mt-1">
-            Welcome back, {user?.name || 'Scholar'}!
+          <h1 className="text-xl sm:text-2xl font-bold text-[#172033] tracking-tight">
+            Welcome back, {userName}
           </h1>
-          <p className="text-indigo-100 text-sm mt-1 max-w-xl">
-            You are enrolled as <span className="font-semibold">{user?.role || 'Student'}</span>.
-            Access your course spaces, faculty schedules, and departmental updates below.
+          <p className="text-xs text-[#5B6475] mt-0.5">
+            {user?.department || 'University Scholar'} • {user?.university || 'University Workspace'}
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
-          <Link to="/rooms/join">
-            <Button variant="secondary" size="sm">
-              Join Room
-            </Button>
-          </Link>
-          <Link to="/rooms/create">
-            <Button variant="primary" size="sm" icon={PlusCircle}>
-              Create Room
-            </Button>
-          </Link>
+        {/* Action Controls */}
+        <div className="flex items-center gap-2 flex-wrap">
+          <Button
+            variant="secondary"
+            size="sm"
+            icon={LogIn}
+            onClick={() => openAddRoomModal('join')}
+          >
+            Join Room
+          </Button>
+
+          <Button
+            variant="accent"
+            size="sm"
+            icon={Plus}
+            onClick={() => openAddRoomModal('create')}
+          >
+            Create Room
+          </Button>
         </div>
       </div>
 
-      {/* Metrics Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card className="flex items-center gap-4 p-5">
-          <div className="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
-            <DoorOpen className="w-6 h-6" />
-          </div>
-          <div>
-            <p className="text-xs text-slate-500 font-medium">Enrolled Rooms</p>
-            <h3 className="text-2xl font-bold text-slate-900 mt-0.5">{mockRooms.length}</h3>
-          </div>
-        </Card>
+      {/* Main Content Area */}
+      {rooms.length === 0 ? (
+        /* Clean Empty State as explicitly specified */
+        <div className="py-8">
+          <div className="rounded-lg border border-dashed border-[#E2E6EE] bg-white p-8 sm:p-12 text-center max-w-lg mx-auto">
+            <div className="w-12 h-12 rounded-lg bg-[#F7F8FA] border border-[#E2E6EE] text-[#5B6475] flex items-center justify-center mx-auto mb-4">
+              <DoorOpen className="w-6 h-6 text-[#3157D5]" />
+            </div>
 
-        <Card className="flex items-center gap-4 p-5">
-          <div className="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
-            <Calendar className="w-6 h-6" />
-          </div>
-          <div>
-            <p className="text-xs text-slate-500 font-medium">Upcoming Events</p>
-            <h3 className="text-2xl font-bold text-slate-900 mt-0.5">{mockSchedules.length}</h3>
-          </div>
-        </Card>
+            <h3 className="text-base font-bold text-[#172033]">
+              You haven't joined any room yet.
+            </h3>
+            <p className="text-xs text-[#5B6475] mt-1.5 max-w-sm mx-auto leading-relaxed">
+              Create a new course or departmental space, or enter a room code provided by your instructor or peer.
+            </p>
 
-        <Card className="flex items-center gap-4 p-5">
-          <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
-            <Users className="w-6 h-6" />
-          </div>
-          <div>
-            <p className="text-xs text-slate-500 font-medium">Active Role</p>
-            <h3 className="text-base font-bold text-slate-900 mt-1">{user?.role || 'Member'}</h3>
-          </div>
-        </Card>
-      </div>
+            {/* Large Add Button with two actions */}
+            <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-2.5">
+              <Button
+                variant="accent"
+                size="md"
+                icon={PlusCircle}
+                onClick={() => openAddRoomModal('create')}
+                className="w-full sm:w-auto"
+              >
+                Create Room
+              </Button>
 
-      {/* Main Workspace Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column: My Active Rooms */}
-        <div className="lg:col-span-2 space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold text-slate-900">My Rooms & Spaces</h2>
-            <Link
-              to="/rooms"
-              className="text-xs font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-1"
-            >
-              <span>View All</span>
-              <ArrowUpRight className="w-3.5 h-3.5" />
-            </Link>
+              <Button
+                variant="secondary"
+                size="md"
+                icon={LogIn}
+                onClick={() => openAddRoomModal('join')}
+                className="w-full sm:w-auto"
+              >
+                Join Room
+              </Button>
+            </div>
           </div>
-          <RoomList rooms={mockRooms.slice(0, 3)} />
         </div>
-
-        {/* Right Column: Today's Schedule */}
+      ) : (
+        /* Populated Dashboard with Room Cards Grid */
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold text-slate-900">Upcoming Schedule</h2>
+            <div className="flex items-center gap-2">
+              <h2 className="text-sm font-bold text-[#172033] uppercase tracking-wider">
+                My Enrolled Spaces
+              </h2>
+              <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded-full bg-[#F7F8FA] border border-[#E2E6EE] text-[#5B6475]">
+                {rooms.length}
+              </span>
+            </div>
+
             <Link
-              to="/schedule"
-              className="text-xs font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-1"
+              to="/rooms"
+              className="text-xs font-semibold text-[#3157D5] hover:text-[#172033] inline-flex items-center gap-1 transition-colors"
             >
-              <span>Full Calendar</span>
-              <ArrowUpRight className="w-3.5 h-3.5" />
+              <span>View All Rooms</span>
+              <ArrowRight className="w-3 h-3" />
             </Link>
           </div>
-          <ScheduleCalendar schedules={mockSchedules} />
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {rooms.map((room) => (
+              <RoomCard key={room.id || room.code} room={room} />
+            ))}
+          </div>
         </div>
-      </div>
+      )}
+
+      {/* Add / Join Room Modal */}
+      <AddJoinRoomModal
+        isOpen={isAddRoomModalOpen}
+        onClose={closeAddRoomModal}
+        initialTab={addRoomModalTab}
+      />
     </div>
   );
 };

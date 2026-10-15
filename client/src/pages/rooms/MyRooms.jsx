@@ -1,78 +1,105 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { PlusCircle, LogIn, Search, Filter } from 'lucide-react';
-import { RoomList } from '../../components/rooms/RoomList';
+import { Plus, Filter } from 'lucide-react';
+import { useApp } from '../../context/AppContext';
+import { RoomCard } from '../../components/rooms/RoomCard';
 import { Button } from '../../components/common/Button';
-import { mockRooms } from '../../data/mockData';
+import { SearchInput } from '../../components/common/SearchInput';
+import { AddJoinRoomModal } from '../../components/rooms/AddJoinRoomModal';
+import { EmptyState } from '../../components/common/EmptyState';
 import { ROOM_TYPES } from '../../utils/constants';
 
 export const MyRooms = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedType, setSelectedType] = useState('ALL');
+  const { rooms, openAddRoomModal, isAddRoomModalOpen, closeAddRoomModal, addRoomModalTab } = useApp();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedFilter, setSelectedFilter] = useState('All');
 
-  const filteredRooms = mockRooms.filter((room) => {
+  const filterOptions = ['All', 'University', 'Department', 'Course', 'Personal'];
+
+  const filteredRooms = rooms.filter((room) => {
+    const matchesFilter = selectedFilter === 'All' || room.type === selectedFilter;
     const matchesSearch =
-      room.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      room.code.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesType = selectedType === 'ALL' || room.type === selectedType;
-    return matchesSearch && matchesType;
+      room.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      room.code.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (room.description && room.description.toLowerCase().includes(searchQuery.toLowerCase()));
+    return matchesFilter && matchesSearch;
   });
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-[#E2E6EE]">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Academic Rooms</h1>
-          <p className="text-sm text-slate-500 mt-1">
-            Browse, manage, and collaborate across courses, departments, and study spaces.
+          <h1 className="text-xl sm:text-2xl font-bold text-[#172033] tracking-tight">
+            My Rooms
+          </h1>
+          <p className="text-xs text-[#5B6475] mt-0.5">
+            Academic divisions, course rooms, research groups, and personal spaces.
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
-          <Link to="/rooms/join">
-            <Button variant="secondary" size="sm" icon={LogIn}>
-              Join with Code
-            </Button>
-          </Link>
-          <Link to="/rooms/create">
-            <Button variant="primary" size="sm" icon={PlusCircle}>
-              Create Room
-            </Button>
-          </Link>
-        </div>
+        <Button
+          variant="accent"
+          size="sm"
+          icon={Plus}
+          onClick={() => openAddRoomModal('create')}
+        >
+          Create Room
+        </Button>
       </div>
 
-      {/* Filter and Search Bar */}
-      <div className="flex flex-col sm:flex-row gap-3">
-        <div className="relative flex-1">
-          <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
-          <input
-            type="text"
-            placeholder="Search by room name or code..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+      {/* Search and Filters Bar */}
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+        <div className="w-full sm:max-w-xs">
+          <SearchInput
+            value={searchQuery}
+            onChange={setSearchQuery}
+            placeholder="Search rooms by name or code..."
+            size="sm"
           />
         </div>
 
-        <div className="flex items-center gap-2">
-          <Filter className="w-4 h-4 text-slate-400" />
-          <select
-            value={selectedType}
-            onChange={(e) => setSelectedType(e.target.value)}
-            className="rounded-lg border border-slate-300 bg-white py-2 px-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          >
-            <option value="ALL">All Room Types</option>
-            {Object.values(ROOM_TYPES).map((type) => (
-              <option key={type} value={type}>
-                {type}
-              </option>
-            ))}
-          </select>
+        {/* Filter Pills */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
+          {filterOptions.map((opt) => (
+            <button
+              key={opt}
+              type="button"
+              onClick={() => setSelectedFilter(opt)}
+              className={`px-3 py-1.5 rounded-md text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
+                selectedFilter === opt
+                  ? 'bg-[#172033] text-white shadow-2xs'
+                  : 'bg-white border border-[#E2E6EE] text-[#5B6475] hover:text-[#172033] hover:border-slate-300'
+              }`}
+            >
+              {opt}
+            </button>
+          ))}
         </div>
       </div>
 
-      <RoomList rooms={filteredRooms} emptyMessage="No matching rooms found." />
+      {/* Grid of rooms or empty state */}
+      {filteredRooms.length === 0 ? (
+        <EmptyState
+          title="No rooms match your filter"
+          description="Try modifying your search criteria or create a new room space."
+          actionLabel="Create Room"
+          actionIcon={Plus}
+          onAction={() => openAddRoomModal('create')}
+        />
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filteredRooms.map((room) => (
+            <RoomCard key={room.id || room.code} room={room} />
+          ))}
+        </div>
+      )}
+
+      {/* Add / Join Room Modal */}
+      <AddJoinRoomModal
+        isOpen={isAddRoomModalOpen}
+        onClose={closeAddRoomModal}
+        initialTab={addRoomModalTab}
+      />
     </div>
   );
 };

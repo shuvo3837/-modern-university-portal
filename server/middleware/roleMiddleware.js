@@ -1,20 +1,25 @@
 import { errorResponse } from '../utils/response.js';
 
 /**
- * Role-Based Access Control Middleware
- * Restricts access based on user role
+ * Role Authorization Middleware
+ * Verifies that the authenticated user possesses one of the required roles
+ * Usage: requireRole('teacher') or requireRole('teacher', 'department_head')
  * @param  {...string} roles
  */
-export const authorize = (...roles) => {
+export const requireRole = (...roles) => {
+  const normalizedAllowedRoles = roles.map((r) => r.toLowerCase().trim());
+
   return (req, res, next) => {
     if (!req.user) {
-      return errorResponse(res, 'User identity not found', 401);
+      return errorResponse(res, 'Authentication required before role verification.', 401);
     }
 
-    if (!roles.includes(req.user.role)) {
+    const userRole = (req.user.role || '').toLowerCase();
+
+    if (!normalizedAllowedRoles.includes(userRole)) {
       return errorResponse(
         res,
-        `Forbidden: role '${req.user.role}' is not authorized to access this resource`,
+        `Access denied. Required role: [${normalizedAllowedRoles.join(', ')}]. Current role: '${userRole}'.`,
         403
       );
     }
@@ -23,4 +28,5 @@ export const authorize = (...roles) => {
   };
 };
 
-export default authorize;
+export const authorize = requireRole;
+export default requireRole;

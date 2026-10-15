@@ -1,14 +1,16 @@
 /**
- * Generate a random 6-character uppercase alphanumeric room code
+ * Generate a random unique room code matching format: PRE-XXXXX (e.g. CSE-7K29X)
+ * @param {string} prefix
  * @returns {string}
  */
-export const generateRoomCode = () => {
+export const generateRoomCode = (prefix = 'ROOM') => {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  let code = '';
-  for (let i = 0; i < 6; i++) {
-    code += chars.charAt(Math.floor(Math.random() * chars.length));
+  let randomPart = '';
+  for (let i = 0; i < 5; i++) {
+    randomPart += chars.charAt(Math.floor(Math.random() * chars.length));
   }
-  return code;
+  const cleanPrefix = (prefix || 'ROOM').toUpperCase().slice(0, 4);
+  return `${cleanPrefix}-${randomPart}`;
 };
 
 export default generateRoomCode;

@@ -1,73 +1,81 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, GraduationCap, Users, Calendar, Shield } from 'lucide-react';
+import { ArrowRight, GraduationCap, Building, ShieldCheck, DoorOpen } from 'lucide-react';
 import { Button } from '../../components/common/Button';
 
 export const Home = () => {
   return (
-    <div className="flex-1">
-      {/* Hero Section */}
-      <section className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto text-center">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-semibold mb-6">
-          <GraduationCap className="w-3.5 h-3.5" />
-          <span>Next-Gen Academic Collaboration Platform</span>
+    <div className="flex-1 flex flex-col justify-center py-16 sm:py-24 px-4 sm:px-6">
+      <div className="max-w-3xl mx-auto text-center space-y-6">
+        {/* Subtle Institutional Badge */}
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-[#E2E6EE] text-[#172033] text-xs font-semibold tracking-wide shadow-2xs">
+          <GraduationCap className="w-3.5 h-3.5 text-[#3157D5]" />
+          <span>Metropolitan University Academic Portal</span>
         </div>
-        <h1 className="text-4xl sm:text-6xl font-extrabold text-slate-900 tracking-tight leading-tight">
-          University Workspace
+
+        {/* Hero Title */}
+        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-[#172033] tracking-tight leading-tight">
+          One Workspace for Your University
         </h1>
-        <p className="mt-4 sm:mt-6 text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
-          The all-in-one digital campus for students, faculty, department chairs, and administrators
-          to collaborate, organize schedules, and manage course spaces.
+
+        {/* Supporting Text */}
+        <p className="text-base sm:text-lg text-[#5B6475] font-normal max-w-xl mx-auto leading-relaxed">
+          Connect. Organize. Collaborate.
         </p>
 
-        <div className="mt-8 sm:mt-10 flex flex-wrap items-center justify-center gap-4">
+        {/* Primary Action Button */}
+        <div className="pt-4 flex items-center justify-center gap-3">
           <Link to="/signup">
-            <Button variant="primary" size="lg" icon={ArrowRight}>
-              Get Started Free
+            <Button variant="accent" size="lg" icon={ArrowRight}>
+              Get Started
             </Button>
           </Link>
           <Link to="/login">
             <Button variant="secondary" size="lg">
-              Sign In to Campus
+              Sign In
             </Button>
           </Link>
         </div>
-      </section>
 
-      {/* Feature Pillars */}
-      <section className="py-12 bg-white border-y border-slate-200">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="p-6 rounded-xl border border-slate-100 bg-slate-50/50">
-            <div className="w-10 h-10 rounded-lg bg-indigo-600 text-white flex items-center justify-center mb-4">
-              <Users className="w-5 h-5" />
+        {/* Minimal academic summary pillars */}
+        <div className="pt-16 grid grid-cols-1 sm:grid-cols-3 gap-4 text-left">
+          <div className="p-4 rounded-lg bg-white border border-[#E2E6EE] space-y-1">
+            <div className="w-7 h-7 rounded bg-[#F7F8FA] border border-[#E2E6EE] text-[#172033] flex items-center justify-center font-bold text-xs mb-2">
+              <Building className="w-3.5 h-3.5 text-[#3157D5]" />
             </div>
-            <h3 className="font-bold text-slate-900 text-base mb-1">Academic Rooms</h3>
-            <p className="text-sm text-slate-600 leading-relaxed">
-              Create and join university, department, course, or personal study rooms with granular access control.
+            <h3 className="text-xs font-bold text-[#172033] uppercase tracking-wider">
+              Department Spaces
+            </h3>
+            <p className="text-xs text-[#5B6475] leading-relaxed">
+              Unified portals for academic divisions, syllabus archives, and announcements.
             </p>
           </div>
 
-          <div className="p-6 rounded-xl border border-slate-100 bg-slate-50/50">
-            <div className="w-10 h-10 rounded-lg bg-indigo-600 text-white flex items-center justify-center mb-4">
-              <Calendar className="w-5 h-5" />
+          <div className="p-4 rounded-lg bg-white border border-[#E2E6EE] space-y-1">
+            <div className="w-7 h-7 rounded bg-[#F7F8FA] border border-[#E2E6EE] text-[#172033] flex items-center justify-center font-bold text-xs mb-2">
+              <DoorOpen className="w-3.5 h-3.5 text-[#3157D5]" />
             </div>
-            <h3 className="font-bold text-slate-900 text-base mb-1">Schedule Sync</h3>
-            <p className="text-sm text-slate-600 leading-relaxed">
-              Keep lectures, lab sessions, faculty office hours, and university deadlines neatly synchronized.
+            <h3 className="text-xs font-bold text-[#172033] uppercase tracking-wider">
+              Course Rooms
+            </h3>
+            <p className="text-xs text-[#5B6475] leading-relaxed">
+              Course discussion, lab sections, and group study spaces with secure access codes.
             </p>
           </div>
 
-          <div className="p-6 rounded-xl border border-slate-100 bg-slate-50/50">
-            <div className="w-10 h-10 rounded-lg bg-indigo-600 text-white flex items-center justify-center mb-4">
-              <Shield className="w-5 h-5" />
+          <div className="p-4 rounded-lg bg-white border border-[#E2E6EE] space-y-1">
+            <div className="w-7 h-7 rounded bg-[#F7F8FA] border border-[#E2E6EE] text-[#172033] flex items-center justify-center font-bold text-xs mb-2">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#3157D5]" />
             </div>
-            <h3 className="font-bold text-slate-900 text-base mb-1">Role-Based Access</h3>
-            <p className="text-sm text-slate-600 leading-relaxed">
-              Tailored workspaces for students, teachers, department heads, and campus administrators.
+            <h3 className="text-xs font-bold text-[#172033] uppercase tracking-wider">
+              Schedule Sync
+            </h3>
+            <p className="text-xs text-[#5B6475] leading-relaxed">
+              Clear faculty office hours, lecture timetables, and granular schedule privacy.
             </p>
           </div>
         </div>
-      </section>
+      </div>
     </div>
   );
 };
